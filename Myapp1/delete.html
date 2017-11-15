@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = document.location.href;
+            var d = decodeURIComponent(url);
+            var s = d.split('=')[1];
+            var m = JSON.parse(s);
+            var k = JSON.stringify({ obj: m });            
+            $.ajax({
+                type: 'DELETE',
+                url: 'api/Familydetails?parameters=' + k,
+                contentType: 'application/json',
+                datatype: JSON,
+                success: function (data) {
+                    alert(data);
+                },
+            });
+
+        });
+
+    </script> 
+</head>
+<body>
+
+</body>
+</html>

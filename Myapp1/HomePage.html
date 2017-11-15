@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="StyleSheet1.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#id1").load("header.html");
+            $("#create").click(function () {
+
+                window.location.href = 'create.html';
+
+
+            });
+
+            $("#search").click(function () {
+
+
+                window.location.href = 'search.html';
+
+            });
+
+
+
+
+        });
+
+    </script>
+</head>
+<body>
+    <div id="id1">
+
+    </div>
+    <div id="home">
+        <input id="create" type="button" value="Create Application" />
+        <br />
+        <br />
+        <br />
+        <input id="search" type="button" value="Search Application" />
+        <br />
+    </div>
+</body>
+</html>

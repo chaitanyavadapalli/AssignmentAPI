@@ -1,0 +1,96 @@
+﻿body {
+}
+#sub1
+{
+     position:absolute;
+    transition: .5s ease;
+    top: 43%;
+
+    left: 50%;
+     background-color:blue;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+}
+#save{
+    background-color:green;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 11px;
+}
+#heading
+{
+    position:absolute;
+    left:42%;
+    top:75px;
+    text-align:center;
+
+}
+#create
+{
+         background-color:blue;
+    border: none;
+    color: white;
+    padding: 20px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+}
+#search
+{
+     background-color:blue;
+    border: none;
+    color: white;
+    padding: 20px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+
+}
+#home
+{
+     position:absolute;
+    transition: .5s ease;
+    top: 40%;
+
+    left: 50%;
+
+}
+#Button1{
+     background-color:green;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 11px;
+
+}
+#Button2
+{
+    background-color:blue;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 11px;
+}

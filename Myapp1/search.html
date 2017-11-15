@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="StyleSheet1.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function edit(fid, mid, fname, mname, lname, city, dob, gender) {
+            debugger;
+            var E = [];
+            var e = {};
+            e["fid"] = fid;
+            e["mid"] = mid;
+            e["fname"] = fname;
+            e["mname"] = mname;
+            e["lname"] = lname;
+            e["city"] = city;
+            e["dob"] = dob;
+            e["gender"] = gender;
+            E.push(e);
+            var m = JSON.stringify(E);
+            document.location.href = "http://localhost:60976/edit.html?name=" + encodeURIComponent(m);
+
+
+        };
+        
+        function delet(a) {
+
+            var array = a.split('|');
+
+            var fid = array[0];
+
+            var mid = array[1];
+
+            var E = [];
+            var e = {};
+
+            e["fid"] = fid;
+            e["mid"] = mid;
+            E.push(e);
+            var k = JSON.stringify({ obj: E });
+            //document.location.href = "http://localhost:60976/delete.html?name=" + encodeURIComponent(m);
+            $.ajax({
+                type: 'DELETE',
+                url: 'api/Familydetails?parameters=' + k,
+                contentType: 'application/json',
+                datatype: JSON,
+                success: function (data) {
+                    alert(data);
+                },
+            });
+        };
+
+        function paging(i)
+        {
+            debugger;
+
+            
+            $("li").removeClass('active');
+
+            $("#id" + i).addClass('active');
+
+            $("#result1").empty();
+            var script = "";
+            var header = $("#result thead tr").get(0);
+           script=script+ "<" + header["tagName"] +">"+ header["innerHTML"] + "</" + header["tagName"] + ">";
+
+
+            var n = 5 + i * 5;
+            var t = 5 * i;
+
+            if (n > $("#result tbody tr").length)
+            {
+                n = $("#result tbody tr").length;
+            }
+
+            for (m = t; m < n; m++) {
+
+
+                var ele = $("#result tbody tr").get(m);
+
+                var s = "<" + ele["tagName"] + ">" + ele["innerHTML"] + "</" + ele["tagName"] + ">";
+                script = script + s;
+            }
+
+            $("#result").hide();
+
+            $("#result1").append(script);
+        }
+
+        $(document).ready(function () {
+            $("#id1").load("header.html");
+
+           
+
+           
+            $("#Button1").click(function () {
+                var E = [];
+                var fname = $("#txtFname").val();
+                var lname = $("#txtLname").val();
+                var dob = $("#txtDob").val();
+                var appid = $("#txtAppid").val();
+                var dob1 = new Date(dob);
+               
+             
+                if(fname==""&&lname==""&&dob==""&&appid=="")
+                {
+                    $("#notify").html("atleast one condition is required for serch condition");
+
+                }
+                else
+                { 
+                    $("#notify").html("");
+                    var e = {};
+                    e["fname"] = fname;
+                    e["lname"] = lname;
+                    e["dob"] = dob1;
+                    e["appid"] = appid;
+                    E.push(e);
+                    var k = JSON.stringify({ obj: E });
+                    $.ajax({
+                        url: 'api/Familydetails?parameters=' + k,
+                        type: 'GET',    
+                        contentType: 'application/json',
+                        datatype: 'json',
+                        success: function (data) {
+                            if (!data || data == '') {
+                                $("#result").empty();
+                                $("#result").append("<tr><td>"+"Data is not found"+"</td></tr>")
+                            }
+                            else {
+                                $("#result").empty();
+                                $("#result").append("<thead><tr><th>FamilyId</th><th>MemberID</th><th>FirstName</th><th>MiddleName</th><th>LastName</th><th>City</th><th>Date of birth</th><th>Gender</th><th>Options</th></thead>");
+                                $.each(data, function(index, val) {
+
+                                    $("#result").append("<tr><td>" + val.familyid + "</td><td>" + val.memberid + "</td><td>" + val.firstname + "</td><td>" + val.middlename + "</td><td>" + val.lastname + "</td><td>" + val.city + "</td><td>" + val.dob + "</td><td>" + val.gender + "</td><td>" + "<input type='button' class='btn btn-primary' value='Delete'" + "onclick='delet(\"" + val.familyid + "|" + val.memberid + "\")' />" + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "<input type='button' class='btn btn-primary' value='Edit'" + "onclick='edit(\"" + val.familyid + "\"," + val.memberid + ",\"" + val.firstname + "\",\"" + val.middlename + "\",\"" + val.lastname + "\",\"" + val.city + "\",\"" + val.dob + "\",\"" + val.gender + "\")' />" + "</td></tr>");
+
+
+                                });
+                                $("#result").hide();
+                                $("#nav").empty();
+                                paging(0);
+                               var count= $("#result tbody tr").length;
+
+                               var nopages = Math.ceil(count / 5);
+                               
+                                var script="<ul class='pagination'>"
+                               for (i = 0; i < nopages; i++)
+                               {
+                           
+                                   if (i == 0) {
+                                       script = script + "<li class='active' id='id"+i+"'><a href='#' onclick='paging(" + i + ")'>" + (i + 1) + "</a></li>";
+                                   }
+                                   else {
+                                       script = script + "<li  id='id"+i+"'><a href='#' onclick='paging(" + i + ")'>" + (i + 1) + "</a></li>";
+                                   }
+                                   if(i!=0)
+                                   {
+                                       var u = "#id" + i;
+                         
+                                       $(u).removeClass('active');
+                           
+                                   }
+                               }
+                               script = script + "</ul>";
+                               
+                                $("#nav").append(script);
+
+
+                            }
+
+
+
+                        },
+                    });
+                }
+            });
+            $("#Button2").click(function () {
+
+                document.location.href = 'HomePage.html';
+
+            });
+            });
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="id1">
+
+        </div>
+        <div class="page-header" style="text-align:center"><h2>SEARCH APPLICATION</h2></div>
+        <div id="id2" style="background-color:lightsteelblue">
+            <form id="myform">
+                &nbsp;&nbsp;&nbsp;&nbsp;First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LastName<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<input id="txtFname" type="text" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="txtLname" type="text" /><br />
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;DOB<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<input id="txtDob" type="date" /><br />
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;Application id<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<input id="txtAppid" type="text" /><br />
+                <br />
+                <br />
+                <span id="notify"></span>
+                <br />
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="Button1" type="button" value="search" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="button" value="Home" id="Button2" />
+            </form>
+            <br />
+        </div>
+
+        <br />
+        <table class="table table-bordered" id="result"></table>
+        <table class="table table-bordered" id="result1"></table> 
+        <div id="nav">
+
+        </div>
+
+    </div>
+    
+
+</body>
+</html>

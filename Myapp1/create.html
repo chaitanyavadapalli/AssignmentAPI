@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="StyleSheet1.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#id1").load("header.html");
+            var E = [];
+            var agearray = [];
+
+            $("#myform").submit(function () {
+                $("#alert").html("");
+                var flagname1 = 1, flagname2 = 1, flagname3 = 1, flagname = 1, flagage = 1, flagtotal = 1;
+                var fname = $("#txtFname").val();
+                var mname = $("#txtMname").val();
+                var lname = $("#txtLname").val();
+                var city = $("#txtCity").val();
+                var dob = $("#txtDob").val();
+                var gender = $('input[name=gender]:checked', '#myform').val();
+                dob = new Date(dob);
+                var today = new Date();
+                var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+                
+                debugger;  
+                for (var i = 0; i < fname.length; i++) {
+                    if (!isNaN(fname[i])) {
+                        flagname1 = 0;
+                        $("#spFname").html("don't enter number in name");
+                        break;
+                    }
+                }
+                for (var i = 0; i < mname.length; i++) {
+                    if (!isNaN(mname[i])) {
+                        flagname2 = 0;
+                        $("#spMname").html("don't enter numbers in name");
+                    }
+                }
+                for (var i = 0; i < lname.length; i++) {
+                    if (!isNaN(lname[i])) {
+                        flagname3 = 0;
+                        $("#spLname").html("don't enter numbers in name");
+                    }
+                }
+                if (fname.length + mname.length + lname.length > 32) {
+                    flagname = 0;
+                    $("#spLname").html("your name should be less than or equal to 32 characters");
+
+                }
+                if (age > 125) {
+                    flagage = 0;
+                    $("#spDob").html("age cannot be greater than 125");
+                }
+                if (E.length == 5) {
+                    flagtotal = 0;
+                    $("#total").html("family cannot have more than 5 members");
+                }
+
+                if (flagname == 1 && flagname1 == 1 && flagname2 == 1 && flagname3 == 1 && flagage == 1&&flagtotal==1) {
+                    if (E.length == 0) {
+                        var e = {};
+                        e["fname"] = fname;
+                        e["mname"] = mname;
+                        e["lname"] = lname;
+                        e["city"] = city;
+                        e["dob"] = dob.toDateString();
+                        e["gender"] = gender;
+                        E.push(e);
+                        agearray.push(age);
+                        this.reset();
+                    }
+                    else {
+                        if (age > agearray[agearray.length - 1]) {
+                            flagage = 0;
+                            $("#spDob").html("age should not be greater than prevoius members age");
+                        }
+                        else {
+                            var e = {};
+                            e["fname"] = fname;
+                            e["mname"] = mname;
+                            e["lname"] = lname;
+                            e["city"] = city;
+                            e["dob"] = dob.toDateString();
+                            e["gender"] = gender;
+                            E.push(e);
+                            agearray.push(age);
+                            this.reset();
+                        }
+
+                    }
+                }
+
+                return false;
+            });
+            $("#save").click(function () {
+                if (E.length == 0)
+                {
+                    $("#alert").html("Please enter details of atleast one member");
+                }
+                else if (E.length != 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'api/Familydetails',
+                        data: {
+                            obj: E
+                        },
+                        datatype: JSON,
+                        success: function (data) {
+                            //$("#result").html(data + "is the family id");
+                            document.location.href = "http://localhost:60976/result.html?name=" + encodeURIComponent(data);
+                        },
+                    });
+                }
+            });
+            $("#Button2").click(function () {
+
+                document.location.href = 'HomePage.html';
+
+
+            });
+
+            });
+
+
+
+    </script>
+</head>
+<body>
+    <div id="id1">
+
+    </div>
+    <br />
+    <br />
+    <div>
+      
+        <div id="heading"><h2>CREATE APPLICATION</h2></div>
+        <br />
+        <div style="background-color:lightcyan">
+            <form id="myform">
+                <table style="width:100%; height: 122px;" draggable="true">
+                    <tr>
+                        <td>*First Name</td>
+                        <td>Middle Name</td>
+                        <td>*Last Name</td>
+                        <td>City</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="txtFname" type="text" required />
+                        </td>
+                        <td>
+                            <input id="txtMname" type="text" />
+                        </td>
+                        <td>
+                            <input id="txtLname" type="text" required />
+                        </td>
+                        <td>
+                            <input id="txtCity" type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span id="spFname"></span></td>
+                        <td><span id="spMname"></span></td>
+                        <td><span id="spLname"></span></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style1">*Date of birth(mm//dd/yy)</td>
+                        <td class="auto-style1">*Gender</td>
+                        <td class="auto-style1"></td>
+                        <td class="auto-style1"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="auto-style1">
+                            <input id="txtDob" type="date" required />
+                        </td>
+                        <td class="auto-style1">
+                            <input id="Radio3" type="radio" value="male" name="gender" required />Male&nbsp;&nbsp;<input id="Radio4" type="radio" value="female" name="gender" required />Female
+                        </td>
+                        <td class="auto-style1"></td>
+                        <td class="auto-style1"></td>
+                    </tr>
+                    <tr>
+                        <td> <span id="spDob"></span></td>
+                        <td><span id="spGender"></span></td>
+                    </tr>
+                </table>
+
+                <br />
+                <br />
+
+                <input type="submit" value="Add Member" id="sub1" />
+            </form>
+            <br />
+            <br />
+        </div>
+        <br />
+        <span id="total"></span>
+       <br />
+        <span id="alert"></span>
+        <br />
+        <br />
+        <input id="save" type="button" value="Save and Exit" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="Home" id="Button2"/>
+        <br />
+        <br />
+    </div>
+</body>
+</html>

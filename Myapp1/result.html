@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            $("#id1").load("header.html");
+            var url = document.location.href;
+            var d = decodeURIComponent(url);
+            var s = d.split('=')[1];
+            $("#result").html("Your family id is" + s);
+            $("#back").click(function () {
+                debugger;
+                document.location.href = 'create.html';
+            });
+        }
+       
+
+    </script>
+
+
+</head>
+<body>
+    <div id="id1">
+
+    </div>
+    <br />
+    <br />
+    <h3><span id="result"></span></h3>
+    <br />
+    <br />
+    <br />
+    <input type="button" id="back" value="back"/>
+</body>
+</html>
